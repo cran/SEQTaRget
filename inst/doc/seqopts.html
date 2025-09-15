@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Defining your SEQopts()</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Defining your SEQopts()</h1>
+
+
+
+<div id="behind-seqopts" class="section level1">
+<h1>Behind SEQopts()</h1>
+<p><code>SEQopts()</code> provides the primary API to changing internal
+options of <code>SEQuential()</code>. While the documentation should go
+over their use, we will expand on them here in greater detail:</p>
+<div id="the-options" class="section level2">
+<h2>The options</h2>
+<div id="general-options" class="section level3">
+<h3>General Options</h3>
+<table>
+<colgroup>
+<col width="16%" />
+<col width="50%" />
+<col width="16%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option Name</th>
+<th>Description</th>
+<th>Input Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>bootstrap</td>
+<td>Whether bootstrapping should take place</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td>bootstrap.nboot</td>
+<td>Number of bootstraps to run in addition to the full model</td>
+<td>Integer</td>
+<td>100L</td>
+</tr>
+<tr class="odd">
+<td>bootstrap.sample</td>
+<td>Subsample of data to use when bootstrapping</td>
+<td>Float [0, 1]</td>
+<td>0.8</td>
+</tr>
+<tr class="even">
+<td>calculate.var</td>
+<td>Whether to calculate the robust standard errors for the outcome
+model</td>
+<td>Boolean</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>compevent</td>
+<td>Column name for competing event variable</td>
+<td>Char</td>
+<td>“LTFU”</td>
+</tr>
+<tr class="even">
+<td>covariates</td>
+<td>If provided, forces covariates for outcome models</td>
+<td>Char</td>
+<td>“X1+X2*X3+X4”</td>
+</tr>
+<tr class="odd">
+<td>data.return</td>
+<td>Whether to return expanded data as output</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td>followup.class</td>
+<td>Whether to expand followup values to an indicator matrix</td>
+<td>Boolean</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>followup.include</td>
+<td>Whether to include ‘followup’ and ‘followup^2’ in outcome
+models</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td>followup.max</td>
+<td>Maximum value of followup per trial</td>
+<td>Numeric</td>
+<td>60</td>
+</tr>
+<tr class="odd">
+<td>followup.min</td>
+<td>Minimum value of followup per trial</td>
+<td>Numeric</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>followup.spline</td>
+<td>Whether to format followup values to a spline</td>
+<td>Boolean</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>hazard</td>
+<td>Whether to estimate the hazard ratio</td>
+<td>Boolean</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>km.curves</td>
+<td>Whether to estimate kaplan meier survival curves and data</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td>multinomial</td>
+<td>Whether to expect more than 2 treatment types</td>
+<td>Boolean</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>ncores</td>
+<td>Number of cores to use in parallel multisession</td>
+<td>Integer</td>
+<td>8L</td>
+</tr>
+<tr class="odd">
+<td>nthreads</td>
+<td>Number of threads to use for data.table manipulations</td>
+<td>Integer</td>
+<td>16L</td>
+</tr>
+<tr class="even">
+<td>parallel</td>
+<td>Whether the bootstrapping should be run in parallel</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td>seed</td>
+<td>Starting seed for random number generators</td>
+<td>Integer</td>
+<td>1636</td>
+</tr>
+<tr class="even">
+<td>selection.first_trial</td>
+<td>Selects only the first eligible trial in the expanded dataset</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td>selection.prob</td>
+<td>Subsample of total IDs to select</td>
+<td>Float [0, 1]</td>
+<td>0.8</td>
+</tr>
+<tr class="even">
+<td>selection.random</td>
+<td>Whether to randomly select IDs with replacement to run analysis</td>
+<td>Boolean</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>subgroup</td>
+<td>Column name for subgroup analysis</td>
+<td>Char</td>
+<td>“sex”</td>
+</tr>
+<tr class="even">
+<td>survival.max</td>
+<td>Maximum value for Risk/Survival curves</td>
+<td>Numeric</td>
+<td>60</td>
+</tr>
+<tr class="odd">
+<td>treat.level</td>
+<td>Treatment levels to compare</td>
+<td>List</td>
+<td>list(0, 1)</td>
+</tr>
+<tr class="even">
+<td>trial.include</td>
+<td>Whether to include ‘trial’ and ‘trial^2’ in outcome models</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="weighting-options" class="section level3">
+<h3>Weighting Options</h3>
+<p>In general these only affect analytic methods of ‘dose-response’ and
+‘censoring’. However, providing <code>cense</code> will allow ITT to be
+weighted in the case of a censoring variable like loss-to-followup.</p>
+<table>
+<colgroup>
+<col width="16%" />
+<col width="50%" />
+<col width="16%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option Name</th>
+<th>Description</th>
+<th>Input Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>cense</td>
+<td>Column name for censoring variable</td>
+<td>Char</td>
+<td>“LTFU”</td>
+</tr>
+<tr class="even">
+<td>cense.denominator</td>
+<td>If provided, forces denominator covariates for censoring models</td>
+<td>Char</td>
+<td>“A1+A2*A3+A4”</td>
+</tr>
+<tr class="odd">
+<td>cense.eligible</td>
+<td>Column name for indicator column defining which rows to use for
+censoring model</td>
+<td>Char</td>
+<td>“eligible_cense”</td>
+</tr>
+<tr class="even">
+<td>cense.numerator</td>
+<td>If provided, forces numerator covariates for censoring models</td>
+<td>Char</td>
+<td>“Z1+Z2*Z3+Z4”</td>
+</tr>
+<tr class="odd">
+<td>denominator</td>
+<td>If provided, forces denominator covariates for weight models</td>
+<td>Char</td>
+<td>“C1+C2*C3+B4”</td>
+</tr>
+<tr class="even">
+<td>numerator</td>
+<td>If provided, forces numerator covariates for weight models</td>
+<td>Char</td>
+<td>“B1+B2*B3+B4”</td>
+</tr>
+<tr class="odd">
+<td>weight.eligible</td>
+<td>List of columns for eligibility in weight models with certain
+treatment values</td>
+<td>List</td>
+<td>list(‘we1’, we2’)</td>
+</tr>
+<tr class="even">
+<td>weight.eligible_cols</td>
+<td>List of column names for indicator columns defining which weights
+are eligible for weight models</td>
+<td>List</td>
+<td>list(“eligible1”, “eligible2”)</td>
+</tr>
+<tr class="odd">
+<td>weight.lag_condition</td>
+<td>Whether weights should be conditioned on treatment lag value</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td>weight.lower</td>
+<td>Lower truncation for weight values</td>
+<td>Float</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td>weight.p99</td>
+<td>Whether to truncate weights at the 99% percentile</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td>weight.preexpansion</td>
+<td>Whether weighting should be done on pre-expanded data</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td>weight.upper</td>
+<td>Upper truncation for weight values</td>
+<td>Float</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td>weighted</td>
+<td>Whether the analysis should be weighted</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="plot-options-km.curves-true" class="section level3">
+<h3>Plot Options (km.curves = TRUE)</h3>
+<p>All of these can be changed after SEQuential has finished analysis -
+if you forget to add them, no need to stop and restart. Additionally,
+SEQuential will output the data used for the plot if you would like to
+customize it yourself through your preferred plotting software.</p>
+<table>
+<colgroup>
+<col width="19%" />
+<col width="42%" />
+<col width="19%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option Name</th>
+<th>Description</th>
+<th>Input Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>plot.colors</td>
+<td>Figure colors for output plot</td>
+<td>List</td>
+<td>list(“red”, “blue”)</td>
+</tr>
+<tr class="even">
+<td>plot.labels</td>
+<td>Legend labels for output plot</td>
+<td>List</td>
+<td>list(“Tx 0”, “Tx 1”)</td>
+</tr>
+<tr class="odd">
+<td>plot.subtitle</td>
+<td>Subtitle for plot output</td>
+<td>Char</td>
+<td>“My Plot Subtitle”</td>
+</tr>
+<tr class="even">
+<td>plot.title</td>
+<td>Title for plot output</td>
+<td>Char</td>
+<td>“My Plot Title”</td>
+</tr>
+<tr class="odd">
+<td>plot.type</td>
+<td>Type of output plot (“survival”, “risk”, “inc”)</td>
+<td>Char</td>
+<td>“survival”</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="special-cases" class="section level3">
+<h3>Special Cases</h3>
+<table>
+<colgroup>
+<col width="19%" />
+<col width="42%" />
+<col width="19%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option Name</th>
+<th>Description</th>
+<th>Input Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>deviation</td>
+<td>Create switch based on deviation from column</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td>deviation.col</td>
+<td>Column name for deviation</td>
+<td>Char</td>
+<td>“deviation_var”</td>
+</tr>
+<tr class="odd">
+<td>deviation.conditions</td>
+<td>RHS evaluations of the same length as treat.levels</td>
+<td>List</td>
+<td>list(“&gt;3”, “==1”)</td>
+</tr>
+<tr class="even">
+<td>deviation.excused</td>
+<td>Whether deviations should be excused by deviation.excused_cols</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td>deviation.excused_cols</td>
+<td>Excused columns for deviation switches</td>
+<td>List</td>
+<td>list(“excuse1”, “excuse2”)</td>
+</tr>
+<tr class="even">
+<td>excused</td>
+<td>When censoring, whether there is an excused condition</td>
+<td>Boolean</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td>excused.cols</td>
+<td>List of column names for treatment switch excuses</td>
+<td>List</td>
+<td>list(“excuse1”, “excuse2”)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="internal-options" class="section level3">
+<h3>Internal Options</h3>
+<p>These are internal options that change output name of covariates or
+the decomposition method when estimating coefficients.</p>
+<table>
+<colgroup>
+<col width="16%" />
+<col width="50%" />
+<col width="16%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option Name</th>
+<th>Description</th>
+<th>Input Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>fastglm.method</td>
+<td>Method for decomposition by fastglm</td>
+<td>Integer</td>
+<td>3L</td>
+</tr>
+<tr class="even">
+<td>indicator.baseline</td>
+<td>Identifier for baseline variables</td>
+<td>Char</td>
+<td>“_bas”</td>
+</tr>
+<tr class="odd">
+<td>indicator.squared</td>
+<td>Identifier for squared variables</td>
+<td>Char</td>
+<td>“_sq”</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
