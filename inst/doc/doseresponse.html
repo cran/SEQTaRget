@@ -340,7 +340,134 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
+<p>Here, we’ll go over some examples of using dose-response. First we
+need to load the library before getting in to some sample use cases.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(SEQTaRget)</span></code></pre></div>
+<p>Currently, dose-response analysis through SEQuential only supports
+binary treatment values. Therefore; running multinomial models will lead
+to errors.</p>
+<div id="dose-response-with-5-bootstrap-samples" class="section level2">
+<h2>Dose-response With 5 bootstrap samples</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>options <span class="ot">&lt;-</span> <span class="fu">SEQopts</span>(<span class="co"># tells SEQuential to create kaplan meier curves</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>                   <span class="at">km.curves =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>                   <span class="co"># tells SEQuential to bootstrap</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>                   <span class="at">bootstrap =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>                   <span class="co"># tells SEQuential to run bootstraps 5 times</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>                   <span class="at">bootstrap.nboot =</span> <span class="dv">5</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co"># use example data</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>data <span class="ot">&lt;-</span> SEQdata                             </span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">SEQuential</span>(data, <span class="at">id.col =</span> <span class="st">&quot;ID&quot;</span>, </span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>                          <span class="at">time.col =</span> <span class="st">&quot;time&quot;</span>, </span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>                          <span class="at">eligible.col =</span> <span class="st">&quot;eligible&quot;</span>, </span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>                          <span class="at">treatment.col =</span> <span class="st">&quot;tx_init&quot;</span>, </span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>                          <span class="at">outcome.col =</span> <span class="st">&quot;outcome&quot;</span>, </span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>                          <span class="at">time_varying.cols =</span> <span class="fu">c</span>(<span class="st">&quot;N&quot;</span>, <span class="st">&quot;L&quot;</span>, <span class="st">&quot;P&quot;</span>), </span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>                          <span class="at">fixed.cols =</span> <span class="st">&quot;sex&quot;</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>                          <span class="at">method =</span> <span class="st">&quot;dose-response&quot;</span>, </span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>                          <span class="at">options =</span> options)</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="fu">km_curve</span>(model, <span class="at">plot.type =</span> <span class="st">&quot;risk&quot;</span>)        <span class="co"># retrieve risk plot</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>survival_data <span class="ot">&lt;-</span> <span class="fu">km_data</span>(model)            <span class="co"># retrieve survival and risk data</span></span></code></pre></div>
+</div>
+<div id="dose-response-with-5-bootstrap-samples-and-losses-to-followup" class="section level2">
+<h2>dose-response with 5 bootstrap samples and losses-to-followup</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>options <span class="ot">&lt;-</span> <span class="fu">SEQopts</span>(<span class="at">km.curves =</span> <span class="cn">TRUE</span>,               </span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>                   <span class="at">bootstrap =</span> <span class="cn">TRUE</span>,                </span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                   <span class="at">bootstrap.nboot =</span> <span class="dv">5</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                   <span class="co"># tells SEQuential to expect LTFU as the censoring column</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                   <span class="at">cense =</span> <span class="st">&quot;LTFU&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>                   <span class="co"># tells SEQuential to treat this column as the </span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>                   <span class="co"># censoring eligibility column</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>                   <span class="at">cense.eligible =</span> <span class="st">&quot;eligible_cense&quot;</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co"># use example data for LTFU</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>data <span class="ot">&lt;-</span> SEQdata.LTFU</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">SEQuential</span>(data, <span class="at">id.col =</span> <span class="st">&quot;ID&quot;</span>, </span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>                          <span class="at">time.col =</span> <span class="st">&quot;time&quot;</span>, </span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>                          <span class="at">eligible.col =</span> <span class="st">&quot;eligible&quot;</span>, </span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>                          <span class="at">treatment.col =</span> <span class="st">&quot;tx_init&quot;</span>, </span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>                          <span class="at">outcome.col =</span> <span class="st">&quot;outcome&quot;</span>, </span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>                          <span class="at">time_varying.cols =</span> <span class="fu">c</span>(<span class="st">&quot;N&quot;</span>, <span class="st">&quot;L&quot;</span>, <span class="st">&quot;P&quot;</span>), </span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>                          <span class="at">fixed.cols =</span> <span class="st">&quot;sex&quot;</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>                          <span class="at">method =</span> <span class="st">&quot;dose-response&quot;</span>, </span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>                          <span class="at">options =</span> options)</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="fu">km_curve</span>(model, <span class="at">plot.type =</span> <span class="st">&quot;risk&quot;</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>survival_data <span class="ot">&lt;-</span> <span class="fu">km_data</span>(model)</span></code></pre></div>
+</div>
+<div id="dose-response-with-5-bootstrap-samples-and-competing-events" class="section level2">
+<h2>dose-response with 5 bootstrap samples and competing events</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>options <span class="ot">&lt;-</span> <span class="fu">SEQopts</span>(<span class="at">km.curves =</span> <span class="cn">TRUE</span>,               </span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>                   <span class="at">bootstrap =</span> <span class="cn">TRUE</span>,                </span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>                   <span class="at">bootstrap.nboot =</span> <span class="dv">5</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>                   <span class="co"># Using LTFU as our competing event</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>                   <span class="at">compevent =</span> <span class="st">&quot;LTFU&quot;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>data <span class="ot">&lt;-</span> SEQdata.LTFU</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">SEQuential</span>(data, <span class="at">id.col =</span> <span class="st">&quot;ID&quot;</span>, </span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>                          <span class="at">time.col =</span> <span class="st">&quot;time&quot;</span>, </span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>                          <span class="at">eligible.col =</span> <span class="st">&quot;eligible&quot;</span>, </span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>                          <span class="at">treatment.col =</span> <span class="st">&quot;tx_init&quot;</span>, </span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>                          <span class="at">outcome.col =</span> <span class="st">&quot;outcome&quot;</span>, </span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>                          <span class="at">time_varying.cols =</span> <span class="fu">c</span>(<span class="st">&quot;N&quot;</span>, <span class="st">&quot;L&quot;</span>, <span class="st">&quot;P&quot;</span>), </span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>                          <span class="at">fixed.cols =</span> <span class="st">&quot;sex&quot;</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>                          <span class="at">method =</span> <span class="st">&quot;dose-response&quot;</span>, </span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>                          <span class="at">options =</span> options)</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="fu">km_curve</span>(model, <span class="at">plot.type =</span> <span class="st">&quot;risk&quot;</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>survival_data <span class="ot">&lt;-</span> <span class="fu">km_data</span>(model)</span></code></pre></div>
+</div>
+<div id="dose-response-hazard-ratio-with-5-bootstrap-samples-and-competing-events" class="section level2">
+<h2>dose-response hazard ratio with 5 bootstrap samples and competing
+events</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>options <span class="ot">&lt;-</span> <span class="fu">SEQopts</span>(<span class="co"># km.curves must be set to FALSE to turn on hazard </span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>                   <span class="co"># ratio creation</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>                   <span class="at">km.curves =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>                   <span class="co"># set hazard to TRUE for hazard ratio creation</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>                   <span class="at">hazard =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>                   <span class="at">bootstrap =</span> <span class="cn">TRUE</span>,                </span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>                   <span class="at">bootstrap.nboot =</span> <span class="dv">5</span>,     </span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>                   <span class="at">compevent =</span> <span class="st">&quot;LTFU&quot;</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>data <span class="ot">&lt;-</span> SEQdata.LTFU                          </span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">SEQuential</span>(data, <span class="at">id.col =</span> <span class="st">&quot;ID&quot;</span>, </span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>                          <span class="at">time.col =</span> <span class="st">&quot;time&quot;</span>, </span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>                          <span class="at">eligible.col =</span> <span class="st">&quot;eligible&quot;</span>, </span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>                          <span class="at">treatment.col =</span> <span class="st">&quot;tx_init&quot;</span>, </span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>                          <span class="at">outcome.col =</span> <span class="st">&quot;outcome&quot;</span>, </span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>                          <span class="at">time_varying.cols =</span> <span class="fu">c</span>(<span class="st">&quot;N&quot;</span>, <span class="st">&quot;L&quot;</span>, <span class="st">&quot;P&quot;</span>), </span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>                          <span class="at">fixed.cols =</span> <span class="st">&quot;sex&quot;</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>                          <span class="at">method =</span> <span class="st">&quot;dose-response&quot;</span>, </span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>                          <span class="at">options =</span> options)</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co"># retrieve hazard ratios</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="fu">hazard_ratio</span>(model)</span></code></pre></div>
+</div>
+<div id="dose-response-with-5-bootstrap-samples-and-competing-events-in-subgroups-defined-by-sex" class="section level2">
+<h2>dose-response with 5 bootstrap samples and competing events in
+subgroups defined by sex</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>options <span class="ot">&lt;-</span> <span class="fu">SEQopts</span>(<span class="at">km.curves =</span> <span class="cn">TRUE</span>,               </span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>                   <span class="at">bootstrap =</span> <span class="cn">TRUE</span>,                </span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                   <span class="at">bootstrap.nboot =</span> <span class="dv">5</span>,     </span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>                   <span class="at">compevent =</span> <span class="st">&quot;LTFU&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>                   <span class="co"># define the subgroup</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>                   <span class="at">subgroup =</span> <span class="st">&quot;sex&quot;</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>data <span class="ot">&lt;-</span> SEQdata.LTFU</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">SEQuential</span>(data, <span class="at">id.col =</span> <span class="st">&quot;ID&quot;</span>, </span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>                          <span class="at">time.col =</span> <span class="st">&quot;time&quot;</span>, </span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>                          <span class="at">eligible.col =</span> <span class="st">&quot;eligible&quot;</span>, </span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>                          <span class="at">treatment.col =</span> <span class="st">&quot;tx_init&quot;</span>, </span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>                          <span class="at">outcome.col =</span> <span class="st">&quot;outcome&quot;</span>, </span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>                          <span class="at">time_varying.cols =</span> <span class="fu">c</span>(<span class="st">&quot;N&quot;</span>, <span class="st">&quot;L&quot;</span>, <span class="st">&quot;P&quot;</span>), </span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>                          <span class="at">fixed.cols =</span> <span class="st">&quot;sex&quot;</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>                          <span class="at">method =</span> <span class="st">&quot;dose-response&quot;</span>, </span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>                          <span class="at">options =</span> options)</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="fu">km_curve</span>(model, <span class="at">plot.type =</span> <span class="st">&quot;risk&quot;</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>survival_data <span class="ot">&lt;-</span> <span class="fu">km_data</span>(model)</span></code></pre></div>
+</div>
 
 
 
