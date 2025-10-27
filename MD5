@@ -1,10 +1,10 @@
-261e3a5521cdb93a6b5982fe55bd0988 *DESCRIPTION
+6b43ad93e421961b05ccce408310a616 *DESCRIPTION
 09e296528a90a502d767b147b7cddf45 *LICENSE
 4ba332155d708c863fc489e38293cbce *NAMESPACE
 141ea1d57e77878d56ba10e90626002a *R/SEQestimate.R
 4ad5df7db2828e8c7fa74326ddb13bdc *R/SEQexpand.R
-be2f93a57b0a62abf6ebf858785134c7 *R/SEQopts.R
-52879fdb606c7f99a5cbfe7b3dbbd7a4 *R/SEQuential.R
+28edcff639cdfc11f878a216c8b8e229 *R/SEQopts.R
+ad33b5d4c3da160db8cdefbb76f17ce4 *R/SEQuential.R
 0788aca7cb718cf32bdf70fb9aa666b5 *R/class_definitions.R
 c4f4cfe2b59bbb81780a73ba7580d464 *R/class_methods.R
 8d061b4855ebc3f1f55c50cef173f6f2 *R/class_setters.R
@@ -88,6 +88,7 @@ d0b0c4af28c607b42d3ddfc4f3d48e5b *tests/testthat.R
 a85aade18bd7423f064858c32609c7dd *tests/testthat/test_coefficients.R
 36553e65cced1ab0ab95769301bf6e3b *tests/testthat/test_covariates.R
 e4d992afda33c0337a49a945c9b98d99 *tests/testthat/test_denominators.R
+223ef1113806cd2d7c39f3cd6dcf023e *tests/testthat/test_deviation.R
 68d1d041c95c3df9535a837ddf3445c2 *tests/testthat/test_errors.R
 563658de3ba3ae1b2b4888ae012d481d *tests/testthat/test_estimate.R
 1cf3ac5a0e974d0a646a8c75e70f28d1 *tests/testthat/test_hazard.R
