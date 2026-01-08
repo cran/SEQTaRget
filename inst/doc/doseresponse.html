@@ -348,7 +348,7 @@ binary treatment values. Therefore; running multinomial models will lead
 to errors.</p>
 <div id="dose-response-with-5-bootstrap-samples" class="section level2">
 <h2>Dose-response With 5 bootstrap samples</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>options <span class="ot">&lt;-</span> <span class="fu">SEQopts</span>(<span class="co"># tells SEQuential to create kaplan meier curves</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>options <span class="ot">&lt;-</span> <span class="fu">SEQopts</span>(<span class="co"># tells SEQuential to create Kaplan-Meier curves</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>                   <span class="at">km.curves =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>                   <span class="co"># tells SEQuential to bootstrap</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>                   <span class="at">bootstrap =</span> <span class="cn">TRUE</span>,</span>
@@ -368,7 +368,8 @@ to errors.</p>
 <span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>                          <span class="at">options =</span> options)</span>
 <span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a></span>
 <span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="fu">km_curve</span>(model, <span class="at">plot.type =</span> <span class="st">&quot;risk&quot;</span>)        <span class="co"># retrieve risk plot</span></span>
-<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>survival_data <span class="ot">&lt;-</span> <span class="fu">km_data</span>(model)            <span class="co"># retrieve survival and risk data</span></span></code></pre></div>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="fu">risk_data</span>(model)</span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="fu">risk_comparison</span>(model)</span></code></pre></div>
 </div>
 <div id="dose-response-with-5-bootstrap-samples-and-losses-to-followup" class="section level2">
 <h2>dose-response with 5 bootstrap samples and losses-to-followup</h2>
@@ -394,7 +395,8 @@ to errors.</p>
 <span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>                          <span class="at">options =</span> options)</span>
 <span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a></span>
 <span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="fu">km_curve</span>(model, <span class="at">plot.type =</span> <span class="st">&quot;risk&quot;</span>)</span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>survival_data <span class="ot">&lt;-</span> <span class="fu">km_data</span>(model)</span></code></pre></div>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="fu">risk_data</span>(model)</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="fu">risk_comparison</span>(model)</span></code></pre></div>
 </div>
 <div id="dose-response-with-5-bootstrap-samples-and-competing-events" class="section level2">
 <h2>dose-response with 5 bootstrap samples and competing events</h2>
@@ -416,7 +418,8 @@ to errors.</p>
 <span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>                          <span class="at">options =</span> options)</span>
 <span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a></span>
 <span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="fu">km_curve</span>(model, <span class="at">plot.type =</span> <span class="st">&quot;risk&quot;</span>)</span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>survival_data <span class="ot">&lt;-</span> <span class="fu">km_data</span>(model)</span></code></pre></div>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="fu">risk_data</span>(model)</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="fu">risk_comparison</span>(model)</span></code></pre></div>
 </div>
 <div id="dose-response-hazard-ratio-with-5-bootstrap-samples-and-competing-events" class="section level2">
 <h2>dose-response hazard ratio with 5 bootstrap samples and competing
@@ -466,7 +469,8 @@ subgroups defined by sex</h2>
 <span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>                          <span class="at">options =</span> options)</span>
 <span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a></span>
 <span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="fu">km_curve</span>(model, <span class="at">plot.type =</span> <span class="st">&quot;risk&quot;</span>)</span>
-<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>survival_data <span class="ot">&lt;-</span> <span class="fu">km_data</span>(model)</span></code></pre></div>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="fu">risk_data</span>(model)</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="fu">risk_comparison</span>(model)</span></code></pre></div>
 </div>
 
 

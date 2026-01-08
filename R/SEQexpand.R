@@ -1,4 +1,4 @@
-#' Creates an expanded dataset for use with \code{SEQuential}
+#' Creates an expanded dataset for use with [SEQuential()]
 #'
 #' @param params SEQparams object built in the SEQuential function
 #'
@@ -31,10 +31,11 @@ SEQexpand <- function(params) {
     } else {
       vars.intake <- c(params@covariates, params@numerator, params@denominator,
                        params@cense.denominator, params@cense.numerator, 
+                       params@visit.denominator, params@visit.numerator,
                        params@deviation.col, tx_bas)
     }
     vars <- unique(c(unlist(strsplit(vars.intake, "\\+|\\*|\\:")),
-                     params@treatment, params@cense, params@cense.eligible,
+                     params@treatment, params@cense, params@cense.eligible, params@visit,
                      params@compevent, unlist(params@weight.eligible_cols), params@subgroup))
     vars.nin <- c("dose", "dose_sq", params@time, paste0(params@time, params@indicator.squared), "tx_lag", "censored")
     vars <- vars[!is.na(vars)]
@@ -118,9 +119,12 @@ SEQexpand <- function(params) {
           
           for (i in seq_along(params@treat.level)) {
             if (!is.na(params@excused.cols[[i]])) {
-              out[(switch) & get(params@treatment) != lag, isExcused := ifelse(get(params@excused.cols[[i]]) == 1, 1, 0)]
+              out[(switch) & 
+                    get(params@treatment) != lag & 
+                    get(params@treatment) == params@treat.level[[i]], isExcused := ifelse(get(params@excused.cols[[i]]) == 1, 1, 0)]
             }
           }
+          setorderv(out, c(params@id, "trial", "followup"))
           out[!is.na(isExcused), excused_tmp := cumsum(isExcused), by = c(params@id, "trial")
               ][(excused_tmp) > 0, switch := FALSE, by = c(params@id, "trial")
                 ][, excused_tmp := NULL]

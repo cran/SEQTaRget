@@ -1,14 +1,15 @@
 ## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = FALSE
 )
 
-## ----setup, eval=FALSE--------------------------------------------------------
+## ----setup--------------------------------------------------------------------
 # library(SEQTaRget)
 
-## ----eval=FALSE---------------------------------------------------------------
-# options <- SEQopts(# tells SEQuential to create kaplan meier curves
+## -----------------------------------------------------------------------------
+# options <- SEQopts(# tells SEQuential to create Kaplan-Meier curves
 #                    km.curves = TRUE,
 #                    # tells SEQuential to bootstrap
 #                    bootstrap = TRUE,
@@ -28,9 +29,10 @@ knitr::opts_chunk$set(
 #                           options = options)
 # 
 # km_curve(model, plot.type = "risk")        # retrieve risk plot
-# survival_data <- km_data(model)            # retrieve survival and risk data
+# risk_data(model)
+# risk_comparison(model)
 
-## ----eval=FALSE---------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # options <- SEQopts(km.curves = TRUE,
 #                    bootstrap = TRUE,
 #                    bootstrap.nboot = 5,
@@ -53,9 +55,10 @@ knitr::opts_chunk$set(
 #                           options = options)
 # 
 # km_curve(model, plot.type = "risk")
-# survival_data <- km_data(model)
+# risk_data(model)
+# risk_comparison(model)
 
-## ----eval=FALSE---------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # options <- SEQopts(km.curves = TRUE,
 #                    bootstrap = TRUE,
 #                    bootstrap.nboot = 5,
@@ -74,9 +77,10 @@ knitr::opts_chunk$set(
 #                           options = options)
 # 
 # km_curve(model, plot.type = "risk")
-# survival_data <- km_data(model)
+# risk_data(model)
+# risk_comparison(model)
 
-## ----eval=FALSE---------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # options <- SEQopts(# km.curves must be set to FALSE to turn on hazard
 #                    # ratio creation
 #                    km.curves = FALSE,
@@ -100,7 +104,7 @@ knitr::opts_chunk$set(
 # # retrieve hazard ratios
 # hazard_ratio(model)
 
-## ----eval=FALSE---------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # options <- SEQopts(km.curves = TRUE,
 #                    bootstrap = TRUE,
 #                    bootstrap.nboot = 5,
@@ -120,5 +124,6 @@ knitr::opts_chunk$set(
 #                           options = options)
 # 
 # km_curve(model, plot.type = "risk")
-# survival_data <- km_data(model)
+# risk_data(model)
+# risk_comparison(model)
 
